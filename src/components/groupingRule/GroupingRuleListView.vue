@@ -6,11 +6,11 @@
     </div>
 
     <el-row class="grouping-rule-list">
-      <el-col :span="5" v-for="(rule, index) in groupList" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
-        <el-card class="grouping-rule" :body-style="{ padding: '0px' }">
+      <el-col :span="5" v-for="(rule, index) in rules" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
+        <el-card class="grouping-rule" :body-style="{ padding: '0px' }" @click.native="selectGroupingRule(rule.id)">
           <div v-if="rule.active" class="el-badge__content">有効</div>
           <div class="grouping-rule-title">
-            {{rule.name}}
+            {{rule.title}}
           </div>
           <div class="grouping-rule-body">
             <el-button type="text">詳細</el-button>
@@ -22,15 +22,13 @@
 </template>
 
 <script>
+import GroupingRule from '@/models/GroupingRule';
+
 export default {
   name: 'GroupingRuleListView',
   data() {
     return {
-      groupList: [
-        { id: 1, name: '単一グループ' },
-        { id: 2, name: 'ランダムグループ分け', active: true },
-        { id: 3, name: '取引量によるグループ分け' },
-      ],
+      rules: [],
     };
   },
 
@@ -38,6 +36,14 @@ export default {
     goGroupingRuleCreateView() {
       this.$router.push({ name: 'GroupingRuleCreateView' });
     },
+
+    selectGroupingRule(id) {
+      this.$router.push({ name: 'GroupingRuleUpdateView', params: { id } });
+    },
+  },
+
+  mounted() {
+    this.rules = GroupingRule.findAll();
   },
 };
 </script>

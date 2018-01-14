@@ -2,11 +2,14 @@
   <div class="grouping-rule-save-view">
     <div class="page-title">
       <div class="row">
-        <div class="col">
+        <div class="col fix">
+          <el-button type="text" @click="back" icon="el-icon-arrow-left">戻る</el-button>
+        </div>
+        <div class="col title">
           <input type="text" class="title-text" v-model="title" placeholder="ルール名称">
         </div>
         <div class="col fix">
-          <el-button type="primary">保存</el-button>
+          <el-button type="primary" @click="saveGroupingRule">保存</el-button>
         </div>
       </div>
     </div>
@@ -67,14 +70,15 @@
 
 <script>
 import _ from 'underscore';
+import GroupingRule from '@/models/GroupingRule';
 
 export default {
   name: 'GroupingRuleSaveView',
   data() {
     return {
       title: '',
-      filename: 'sample.ts',
-      params: '{\n  "groupNum": 3\n}',
+      filename: '',
+      params: '',
       trialExecuted: false,
       groupNum: 0,
       recommendRule: {},
@@ -82,6 +86,31 @@ export default {
   },
 
   methods: {
+    // 戻るボタン押下時
+    back() {
+      this.$router.back();
+    },
+
+    // 保存ボタン押下時
+    saveGroupingRule() {
+      this.$confirm('保存しますか?').then(() => {
+        let rule;
+        if (this.$rule) {
+          rule = this.$rule;
+        } else {
+          rule = GroupingRule.of(this.title, this.filename, this.params);
+        }
+        rule.title = this.title;
+        rule.filename = this.filename;
+        rule.params = this.params;
+
+        rule.save();
+
+        this.$router.back();
+      });
+    },
+
+    // 試し実行ボタン押下時
     trialExecute() {
       const params = JSON.parse(this.params);
       this.groupNum = params.groupNum;
@@ -105,6 +134,17 @@ export default {
       ];
     },
   },
+
+  // 画面描画時
+  mounted() {
+    if (!this.$route.params.id) {
+      return;
+    }
+    this.$rule = GroupingRule.findOne(this.$route.params.id);
+    this.title = this.$rule.title;
+    this.filename = this.$rule.filename;
+    this.params = this.$rule.params;
+  },
 };
 </script>
 
@@ -127,6 +167,11 @@ export default {
       &.fix {
         width: 1%;
       }
+
+      &.title {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
     }
   }
 
@@ -143,6 +188,13 @@ export default {
 
     &:focus {
       border-color: #46A0FC;
+    }
+
+    &::placeholder-shown {
+      color: #ddd;
+    }
+    &::-webkit-input-placeholder {
+      color: #ddd;
     }
   }
 }

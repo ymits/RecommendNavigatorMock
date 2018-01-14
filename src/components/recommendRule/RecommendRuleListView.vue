@@ -6,7 +6,7 @@
     </div>
 
     <el-row class="recommend-rule-list">
-      <el-col :span="5" v-for="(rule, index) in groupList" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
+      <el-col :span="5" v-for="(rule, index) in rules" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
         <el-card class="recommend-rule" :body-style="{ padding: '0px' }" @click.native="selectRecommendRule(rule.id)">
           <div class="recommend-rule-title">
             {{rule.title}}
@@ -27,7 +27,7 @@ export default {
   name: 'RecommendRuleListView',
   data() {
     return {
-      groupList: [],
+      rules: [],
     };
   },
 
@@ -42,7 +42,7 @@ export default {
   },
 
   mounted() {
-    this.groupList = RecommendRule.findAll();
+    this.rules = RecommendRule.findAll();
   },
 };
 </script>
