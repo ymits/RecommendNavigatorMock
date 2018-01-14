@@ -69,7 +69,7 @@
 import _ from 'underscore';
 
 export default {
-  name: 'HelloWorld',
+  name: 'GroupingRuleSaveView',
   data() {
     return {
       title: '',
