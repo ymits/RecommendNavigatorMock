@@ -1,6 +1,10 @@
 <template>
   <el-container id="app" >
-    <el-header height="40px">Header</el-header>
+    <el-header height="40px">
+      <span class="title">
+        <strong>RECOMMEND</strong> NAVIGATOR
+      </span>
+    </el-header>
     <el-container>
       <el-aside width="200px">
         <el-menu :router="true" :default-active="activeLink"
@@ -15,7 +19,9 @@
           </template>
         </el-menu>
       </el-aside>
-      <router-view/>
+      <el-main>
+        <router-view/>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -37,6 +43,15 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+header {
+  font-size: 22px;
+  border-bottom: solid 1px #E0E0E0
+}
 
+aside {
+  .el-menu {
+    height: 100%;
+  }
+}
 </style>

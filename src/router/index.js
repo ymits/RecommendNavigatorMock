@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
 import HelloWorld from '@/components/HelloWorld';
+import GroupList from '@/components/group/GroupList';
 
 Vue.use(Router);
 
@@ -9,19 +10,17 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
       component: Index,
       icon: 'el-icon-menu',
-      title: 'グループ',
+      title: 'グループ分けルール',
       children: [
-        { path: '', component: HelloWorld },
+        { path: '', component: GroupList },
         { path: 'create', component: HelloWorld },
         { path: 'edit', component: HelloWorld },
       ],
     },
     {
       path: '/recommend',
-      name: 'HelloWorld',
       component: Index,
       icon: 'el-icon-share',
       title: '推奨エンジン',
