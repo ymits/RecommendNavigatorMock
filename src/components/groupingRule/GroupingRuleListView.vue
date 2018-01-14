@@ -1,18 +1,18 @@
 <template>
-  <div class="group-list-view">
+  <div class="grouping-rule-list-view">
     <div class="page-title">
-      <el-button type="primary">新しいグループ分けルールの作成</el-button>
+      <el-button type="primary" @click="goGroupCreateView">新しいグループ分けルールの作成</el-button>
       <h1>グループ分けルール一覧</h1>
     </div>
 
-    <el-row class="group-list">
+    <el-row class="grouping-rule-list">
       <el-col :span="5" v-for="(group, index) in groupList" :key="group" :offset="index % 4 != 0 ? 1 : 0">
-        <el-card class="group-item" :body-style="{ padding: '0px' }">
+        <el-card class="grouping-rule" :body-style="{ padding: '0px' }">
           <div v-if="group.active" class="el-badge__content">有効</div>
-          <div class="group-title">
+          <div class="grouping-rule-title">
             {{group.name}}
           </div>
-          <div class="group-body">
+          <div class="grouping-rule-body">
             <el-button type="text">詳細</el-button>
           </div>
         </el-card>
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'GroupingRuleListView',
   data() {
     return {
       groupList: [
@@ -33,10 +33,17 @@ export default {
       ],
     };
   },
+
+  methods: {
+    goGroupCreateView() {
+      this.$router.push({ name: 'GroupingRuleCreateView' });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+// タイトル
 .page-title {
   border-bottom: solid 1px #E0E0E0;
   margin-bottom: 20px;
@@ -50,19 +57,20 @@ export default {
   }
 }
 
-.group-list {
+// ルール一覧
+.grouping-rule-list {
 
-  .group-item {
+  .grouping-rule {
     position: relative;
     margin-top: 10px;
     overflow: visible;
 
-    .group-title {
+    .grouping-rule-title {
       padding: 10px;
       height: 100px;
     }
 
-    .group-body {
+    .grouping-rule-body {
       border-top: solid #EBEEF5 1px;
       text-align: center;
     }
