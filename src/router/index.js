@@ -5,6 +5,7 @@ import HelloWorld from '@/components/HelloWorld';
 import GroupingRuleListView from '@/components/groupingRule/GroupingRuleListView';
 import GroupingRuleSaveView from '@/components/groupingRule/GroupingRuleSaveView';
 import RecommendRuleListView from '@/components/recommendRule/RecommendRuleListView';
+import RecommendRuleSaveView from '@/components/recommendRule/RecommendRuleSaveView';
 
 Vue.use(Router);
 
@@ -18,7 +19,7 @@ export default new Router({
       title: '推奨ルール',
       children: [
         { path: '', name: 'RecommendRuleListView', component: RecommendRuleListView },
-        { path: 'create', component: HelloWorld },
+        { path: 'create', name: 'RecommendRuleCreateView', component: RecommendRuleSaveView },
         { path: 'update/:id', component: HelloWorld },
       ],
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="grouping-rule-list-view">
     <div class="page-title">
-      <el-button type="primary" @click="goGroupCreateView">新しいグループ分けルールの作成</el-button>
+      <el-button type="primary" @click="goGroupingRuleCreateView">新しいグループ分けルールの作成</el-button>
       <h1>グループ分けルール一覧</h1>
     </div>
 
@@ -35,7 +35,7 @@ export default {
   },
 
   methods: {
-    goGroupCreateView() {
+    goGroupingRuleCreateView() {
       this.$router.push({ name: 'GroupingRuleCreateView' });
     },
   },

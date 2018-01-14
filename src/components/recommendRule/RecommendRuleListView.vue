@@ -1,7 +1,7 @@
 <template>
   <div class="recommend-rule-list-view">
     <div class="page-title">
-      <el-button type="primary" @click="goGroupCreateView">新しい推奨ルールの作成</el-button>
+      <el-button type="primary" @click="goRecommendRuleCreateView">新しい推奨ルールの作成</el-button>
       <h1>推奨ルール一覧</h1>
     </div>
 
