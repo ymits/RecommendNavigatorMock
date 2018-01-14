@@ -6,10 +6,10 @@
     </div>
 
     <el-row class="recommend-rule-list">
-      <el-col :span="5" v-for="(group, index) in groupList" :key="group" :offset="index % 4 != 0 ? 1 : 0">
-        <el-card class="recommend-rule" :body-style="{ padding: '0px' }">
+      <el-col :span="5" v-for="(rule, index) in groupList" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
+        <el-card class="recommend-rule" :body-style="{ padding: '0px' }" @click.native="selectRecommendRule(rule.id)">
           <div class="recommend-rule-title">
-            {{group.name}}
+            {{rule.title}}
           </div>
           <div class="recommend-rule-body">
             <el-button type="text">詳細</el-button>
@@ -21,14 +21,13 @@
 </template>
 
 <script>
+import RecommendRule from '@/models/RecommendRule';
+
 export default {
   name: 'RecommendRuleListView',
   data() {
     return {
-      groupList: [
-        { id: 1, name: 'クイックスコアを利用した推奨' },
-        { id: 2, name: 'クイックスコアと購入履歴を利用した推奨' },
-      ],
+      groupList: [],
     };
   },
 
@@ -36,6 +35,14 @@ export default {
     goRecommendRuleCreateView() {
       this.$router.push({ name: 'RecommendRuleCreateView' });
     },
+
+    selectRecommendRule(id) {
+      this.$router.push({ name: 'RecommendRuleUpdateView', params: { id } });
+    },
+  },
+
+  mounted() {
+    this.groupList = RecommendRule.findAll();
   },
 };
 </script>

@@ -2,11 +2,14 @@
   <div class="recommend-rule-save-view">
     <div class="page-title">
       <div class="row">
-        <div class="col">
+        <div class="col fix">
+          <el-button type="text" @click="back" icon="el-icon-arrow-left">戻る</el-button>
+        </div>
+        <div class="col title">
           <input type="text" class="title-text" v-model="title" placeholder="ルール名称">
         </div>
         <div class="col fix">
-          <el-button type="primary">保存</el-button>
+          <el-button type="primary" @click="saveRecommendRule">保存</el-button>
         </div>
       </div>
     </div>
@@ -22,17 +25,53 @@
 </template>
 
 <script>
+import RecommendRule from '@/models/RecommendRule';
+
 export default {
   name: 'RecommendRuleSaveView',
   data() {
     return {
       title: '',
-      filename: 'sample.ts',
-      params: '{\n  "groupNum": 3\n}',
+      filename: '',
+      params: '',
     };
   },
 
   methods: {
+    // 戻るボタン押下時
+    back() {
+      this.$router.back();
+    },
+
+    // 保存ボタン押下時
+    saveRecommendRule() {
+      this.$confirm('保存しますか?').then(() => {
+        let rule;
+        if (this.$rule) {
+          rule = this.$rule;
+        } else {
+          rule = RecommendRule.of(this.title, this.filename, this.params);
+        }
+        rule.title = this.title;
+        rule.filename = this.filename;
+        rule.params = this.params;
+
+        rule.save();
+
+        this.$router.back();
+      });
+    },
+  },
+
+  // 画面描画時
+  mounted() {
+    if (!this.$route.params.id) {
+      return;
+    }
+    this.$rule = RecommendRule.findOne(this.$route.params.id);
+    this.title = this.$rule.title;
+    this.filename = this.$rule.filename;
+    this.params = this.$rule.params;
   },
 };
 </script>
@@ -56,6 +95,11 @@ export default {
       &.fix {
         width: 1%;
       }
+
+      &.title {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
     }
   }
 
@@ -72,6 +116,13 @@ export default {
 
     &:focus {
       border-color: #46A0FC;
+    }
+
+    &::placeholder-shown {
+      color: #ddd;
+    }
+    &::-webkit-input-placeholder {
+      color: #ddd;
     }
   }
 }

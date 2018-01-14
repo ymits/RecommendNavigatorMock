@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Index from '@/components/Index';
-import HelloWorld from '@/components/HelloWorld';
 import GroupingRuleListView from '@/components/groupingRule/GroupingRuleListView';
 import GroupingRuleSaveView from '@/components/groupingRule/GroupingRuleSaveView';
 import RecommendRuleListView from '@/components/recommendRule/RecommendRuleListView';
@@ -20,7 +19,7 @@ export default new Router({
       children: [
         { path: '', name: 'RecommendRuleListView', component: RecommendRuleListView },
         { path: 'create', name: 'RecommendRuleCreateView', component: RecommendRuleSaveView },
-        { path: 'update/:id', component: HelloWorld },
+        { path: 'update/:id', name: 'RecommendRuleUpdateView', component: RecommendRuleSaveView },
       ],
     },
     {
@@ -30,7 +29,7 @@ export default new Router({
       icon: 'el-icon-menu',
       title: 'グループ分けルール',
       children: [
-        { path: '', component: GroupingRuleListView },
+        { path: '', name: 'GroupingRuleListView', component: GroupingRuleListView },
         { path: 'create', name: 'GroupingRuleCreateView', component: GroupingRuleSaveView },
         { path: 'update/:id', name: 'GroupingRuleUpdateView', component: GroupingRuleSaveView },
       ],

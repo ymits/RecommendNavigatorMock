@@ -45,6 +45,7 @@ module.exports = {
     }],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    "arrow-body-style": "off"
+    "arrow-body-style": "off",
+    "max-len": ["error", { "code": 160 }]
   }
 }

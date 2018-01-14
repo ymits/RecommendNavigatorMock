@@ -6,11 +6,11 @@
     </div>
 
     <el-row class="grouping-rule-list">
-      <el-col :span="5" v-for="(group, index) in groupList" :key="group" :offset="index % 4 != 0 ? 1 : 0">
+      <el-col :span="5" v-for="(rule, index) in groupList" :key="rule.id" :offset="index % 4 != 0 ? 1 : 0">
         <el-card class="grouping-rule" :body-style="{ padding: '0px' }">
-          <div v-if="group.active" class="el-badge__content">有効</div>
+          <div v-if="rule.active" class="el-badge__content">有効</div>
           <div class="grouping-rule-title">
-            {{group.name}}
+            {{rule.name}}
           </div>
           <div class="grouping-rule-body">
             <el-button type="text">詳細</el-button>
