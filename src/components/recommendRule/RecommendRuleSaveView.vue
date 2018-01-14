@@ -45,6 +45,7 @@ export default {
 
     // 保存ボタン押下時
     saveRecommendRule() {
+      console.log('test');
       this.$confirm('保存しますか?').then(() => {
         let rule;
         if (this.$rule) {

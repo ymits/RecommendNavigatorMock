@@ -71,6 +71,7 @@
 <script>
 import _ from 'underscore';
 import GroupingRule from '@/models/GroupingRule';
+import RecommendRule from '@/models/RecommendRule';
 
 export default {
   name: 'GroupingRuleSaveView',
@@ -112,8 +113,13 @@ export default {
 
     // 試し実行ボタン押下時
     trialExecute() {
-      const params = JSON.parse(this.params);
-      this.groupNum = params.groupNum;
+      if (this.params) {
+        const params = JSON.parse(this.params);
+        this.groupNum = params.groupNum;
+      } else {
+        this.groupNum = 1;
+      }
+
       this.trialExecuted = true;
     },
   },
@@ -129,9 +135,12 @@ export default {
     },
 
     recommendRules() {
-      return [
-        { value: 1, label: 'ロイタースコアを利用した推奨' },
-      ];
+      return RecommendRule.findAll().map((rule) => {
+        return {
+          value: rule.id,
+          label: rule.title,
+        };
+      });
     },
   },
 

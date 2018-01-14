@@ -2,7 +2,7 @@ import _ from 'underscore';
 
 const storeData = [
   { id: 'PresetGroupingRule_1', title: '単一グループ', filename: 'sample1', params: '' },
-  { id: 'PresetGroupingRule_2', title: 'ランダムグループ分け', filename: 'sample2', params: '{\n  "groupNum": 3,\n}', active: true },
+  { id: 'PresetGroupingRule_2', title: 'ランダムグループ分け', filename: 'sample2', params: '{\n  "groupNum": 3\n}', active: true },
 ];
 
 class GroupingRule {
