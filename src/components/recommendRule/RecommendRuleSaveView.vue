@@ -6,12 +6,13 @@
           <el-button type="text" @click="back" icon="el-icon-arrow-left">戻る</el-button>
         </div>
         <div class="col title">
-          <input type="text" class="title-text" v-model="title" placeholder="ルール名称">
+          <input type="text" class="title-text" name="title" v-model="title" placeholder="ルール名称" v-validate="'required'">
         </div>
         <div class="col fix">
           <el-button type="primary" @click="saveRecommendRule">保存</el-button>
         </div>
       </div>
+      <el-alert v-show="errors.has('title')" title="名称は必須だよ" type="error" show-icon :closable="false"></el-alert>
     </div>
     <el-form label-position="top" label-width="100px" class="program-info">
       <el-form-item label="ファイル名">
@@ -31,9 +32,9 @@ export default {
   name: 'RecommendRuleSaveView',
   data() {
     return {
-      title: '',
-      filename: '',
-      params: '',
+      title: null,
+      filename: null,
+      params: null,
     };
   },
 
@@ -45,21 +46,25 @@ export default {
 
     // 保存ボタン押下時
     saveRecommendRule() {
-      console.log('test');
-      this.$confirm('保存しますか?').then(() => {
-        let rule;
-        if (this.$rule) {
-          rule = this.$rule;
-        } else {
-          rule = RecommendRule.of(this.title, this.filename, this.params);
+      this.$validator.validateAll().then((result) => {
+        if (!result) {
+          return;
         }
-        rule.title = this.title;
-        rule.filename = this.filename;
-        rule.params = this.params;
+        this.$confirm('保存しますか?').then(() => {
+          let rule;
+          if (this.$rule) {
+            rule = this.$rule;
+          } else {
+            rule = RecommendRule.of(this.title, this.filename, this.params);
+          }
+          rule.title = this.title;
+          rule.filename = this.filename;
+          rule.params = this.params;
 
-        rule.save();
+          rule.save();
 
-        this.$router.back();
+          this.$router.back();
+        });
       });
     },
   },
