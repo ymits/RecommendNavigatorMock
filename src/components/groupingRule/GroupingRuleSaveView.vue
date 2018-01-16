@@ -15,6 +15,9 @@
       <el-alert v-show="errors.has('title')" title="名称は必須だよ" type="error" show-icon :closable="false"></el-alert>
     </div>
     <el-form label-position="top" label-width="100px" class="program-info">
+      <div class="active-badge" v-if="$rule && $rule.active">
+        <el-tag type="danger">現在適用中のルール</el-tag>
+      </div>
       <el-form-item label="ファイル名">
         <el-input v-model="filename"></el-input>
       </el-form-item>
@@ -25,15 +28,15 @@
         <el-button @click="trialExecute">試し実行</el-button>
       </el-form-item>
     </el-form>
-    <div class="execute-result" v-if="trialExecuted">
+    <div class="group-info" v-if="showGroupInfo">
       <el-table
-        :data="tableData"
+        :data="groups"
         style="width: 100%">
         <el-table-column
           label="No"
           width="50">
           <template slot-scope="scope">
-            {{ scope.row.id }}
+            {{ scope.$index + 1 }}
           </template>
         </el-table-column>
         <el-table-column
@@ -41,14 +44,14 @@
           width="80"
           align="right">
           <template slot-scope="scope">
-            <el-button type="text">{{ scope.row.memberCount }}</el-button>
+            <el-button type="text">{{ scope.row.memberCount }}</el-button> 人
           </template>
         </el-table-column>
         <el-table-column
           label="推奨ルール"
           width="280">
           <template slot-scope="scope">
-            <el-select v-model="recommendRule[scope.row.id]" placeholder="推奨ルールの選択">
+            <el-select v-model="scope.row.recommendRule" placeholder="推奨ルールの選択">
               <el-option
                 v-for="rule in recommendRules"
                 :key="rule.value"
@@ -59,11 +62,19 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="ユーザ行動結果">
+          label="推奨ルールの評価">
+          <template slot-scope="scope">
+            <div class="">
+              遷移率：{{ scope.row.viewRatio || '--' }}% 購入率：{{ scope.row.buyRatio || '--' }}%
+            </div>
+            <div class="">
+              推薦回数：{{ scope.row.recommendCount || '--' }}回 遷移回数：{{ scope.row.viewCount || '--' }}回 購入回数：{{ scope.row.buyCount || '--' }}回
+            </div>
+          </template>
         </el-table-column>
       </el-table>
       <div class="adapt-btn-row">
-        <el-button type="primary">適用する</el-button>
+        <el-button type="primary" @click="adaptRule">適用する</el-button>
       </div>
     </div>
   </div>
@@ -73,6 +84,7 @@
 import _ from 'underscore';
 import GroupingRule from '@/models/GroupingRule';
 import RecommendRule from '@/models/RecommendRule';
+import Group from '@/models/Group';
 
 export default {
   name: 'GroupingRuleSaveView',
@@ -81,8 +93,8 @@ export default {
       title: '',
       filename: '',
       params: '',
-      trialExecuted: false,
-      groupNum: 0,
+      showGroupInfo: false,
+      groups: [],
       recommendRule: {},
     };
   },
@@ -119,26 +131,52 @@ export default {
 
     // 試し実行ボタン押下時
     trialExecute() {
-      if (this.params) {
+      let groupNum = 1;
+      try {
         const params = JSON.parse(this.params);
-        this.groupNum = params.groupNum;
-      } else {
-        this.groupNum = 1;
+        groupNum = params.groupNum;
+      } catch (e) {
+        // do nothing
       }
+      this.groups = _.range(groupNum).map(() => {
+        return Group.of(300);
+      });
+      this.showGroupInfo = true;
+    },
 
-      this.trialExecuted = true;
+    // 適用ボタン押下時
+    adaptRule() {
+      this.$confirm('適用しますか?').then(() => {
+        // GroupingRuleのactiveフラグを付け替える
+        GroupingRule.findAll().forEach((_rule) => {
+          _rule.active = false;
+          _rule.save();
+        });
+        let rule;
+        if (this.$rule) {
+          rule = this.$rule;
+        } else {
+          rule = GroupingRule.of(this.title, this.filename, this.params);
+        }
+        rule.title = this.title;
+        rule.filename = this.filename;
+        rule.params = this.params;
+        rule.active = true;
+
+        rule.save();
+
+        // Groupの保存
+        Group.deleteAll();
+        this.groups.forEach((group) => {
+          group.save();
+        });
+
+        this.$router.back();
+      });
     },
   },
 
   computed: {
-    tableData() {
-      return _.range(this.groupNum).map((index) => {
-        return {
-          id: index,
-          memberCount: (Math.random() * 1000).toFixed(),
-        };
-      });
-    },
 
     recommendRules() {
       return RecommendRule.findAll().map((rule) => {
@@ -152,6 +190,7 @@ export default {
 
   // 画面描画時
   mounted() {
+    console.log('view');
     if (!this.$route.params.id) {
       return;
     }
@@ -159,6 +198,12 @@ export default {
     this.title = this.$rule.title;
     this.filename = this.$rule.filename;
     this.params = this.$rule.params;
+    this.showGroupInfo = this.$rule.active;
+    if (this.showGroupInfo) {
+      this.groups = Group.findAll();
+      this.recommendRule[0] = 'PresetRecommendRule_1';
+      this.recommendRule[1] = 'PresetRecommendRule_2';
+    }
   },
 };
 </script>
@@ -225,8 +270,8 @@ export default {
   }
 }
 
-// お試し実行結果
-.execute-result {
+// グループ情報
+.group-info {
   .el-select {
     display: block;
   }
@@ -235,5 +280,9 @@ export default {
     margin-top: 22px;
     text-align: center;
   }
+}
+
+.active-badge {
+  text-align: right;
 }
 </style>

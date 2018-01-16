@@ -2,7 +2,7 @@ import _ from 'underscore';
 
 const storeData = [
   { id: 'PresetGroupingRule_1', title: '単一グループ', filename: 'sample1', params: '' },
-  { id: 'PresetGroupingRule_2', title: 'ランダムグループ分け', filename: 'sample2', params: '{\n  "groupNum": 3\n}', active: true },
+  { id: 'PresetGroupingRule_2', title: 'ランダムグループ分け', filename: 'sample2', params: '{\n  "groupNum": 2\n}', active: true },
 ];
 
 class GroupingRule {
@@ -40,12 +40,12 @@ class GroupingRule {
 
   static findOne(id) {
     const json = storeData.find(data => id === data.id);
-    return json ? new GroupingRule(json.id, json.title, json.filename, json.params) : null;
+    return json ? new GroupingRule(json.id, json.title, json.filename, json.params, json.active) : null;
   }
 
   static findAll() {
     return storeData.map((data) => {
-      return new GroupingRule(data.id, data.title, data.filename, data.params);
+      return new GroupingRule(data.id, data.title, data.filename, data.params, data.active);
     });
   }
 }
