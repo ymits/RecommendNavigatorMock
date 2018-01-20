@@ -15,7 +15,7 @@
       <el-alert v-show="errors.has('title')" title="名称は必須だよ" type="error" show-icon :closable="false"></el-alert>
     </div>
     <el-form label-position="top" label-width="100px" class="program-info">
-      <div class="active-badge" v-if="$rule && $rule.active">
+      <div class="active-badge" v-if="rule && rule.active">
         <el-tag type="danger">現在適用中のルール</el-tag>
       </div>
       <el-form-item label="ファイル名">
@@ -54,9 +54,9 @@
             <el-select v-model="scope.row.recommendRule" placeholder="推奨ルールの選択">
               <el-option
                 v-for="rule in recommendRules"
-                :key="rule.value"
-                :label="rule.label"
-                :value="rule.value">
+                :key="rule.id"
+                :label="rule.title"
+                :value="rule.id">
               </el-option>
             </el-select>
           </template>
@@ -95,7 +95,8 @@ export default {
       params: '',
       showGroupInfo: false,
       groups: [],
-      recommendRule: {},
+      recommendRules: [],
+      rule: null,
     };
   },
 
@@ -113,8 +114,8 @@ export default {
         }
         this.$confirm('保存しますか?').then(() => {
           let rule;
-          if (this.$rule) {
-            rule = this.$rule;
+          if (this.rule) {
+            rule = this.rule;
           } else {
             rule = GroupingRule.of(this.title, this.filename, this.params);
           }
@@ -153,8 +154,8 @@ export default {
           _rule.save();
         });
         let rule;
-        if (this.$rule) {
-          rule = this.$rule;
+        if (this.rule) {
+          rule = this.rule;
         } else {
           rule = GroupingRule.of(this.title, this.filename, this.params);
         }
@@ -176,33 +177,24 @@ export default {
     },
   },
 
-  computed: {
-
-    recommendRules() {
-      return RecommendRule.findAll().map((rule) => {
-        return {
-          value: rule.id,
-          label: rule.title,
-        };
-      });
-    },
-  },
-
   // 画面描画時
   mounted() {
     console.log('view');
+    RecommendRule.findAll().then((rules) => {
+      this.recommendRules = rules;
+    });
+
     if (!this.$route.params.id) {
       return;
     }
-    this.$rule = GroupingRule.findOne(this.$route.params.id);
-    this.title = this.$rule.title;
-    this.filename = this.$rule.filename;
-    this.params = this.$rule.params;
-    this.showGroupInfo = this.$rule.active;
+
+    this.rule = GroupingRule.findOne(this.$route.params.id);
+    this.title = this.rule.title;
+    this.filename = this.rule.filename;
+    this.params = this.rule.params;
+    this.showGroupInfo = this.rule.active;
     if (this.showGroupInfo) {
       this.groups = Group.findAll();
-      this.recommendRule[0] = 'PresetRecommendRule_1';
-      this.recommendRule[1] = 'PresetRecommendRule_2';
     }
   },
 };

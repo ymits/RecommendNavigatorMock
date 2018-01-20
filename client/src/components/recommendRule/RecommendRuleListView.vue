@@ -42,7 +42,9 @@ export default {
   },
 
   mounted() {
-    this.rules = RecommendRule.findAll();
+    RecommendRule.findAll().then((rules) => {
+      this.rules = rules;
+    });
   },
 };
 </script>

@@ -74,10 +74,12 @@ export default {
     if (!this.$route.params.id) {
       return;
     }
-    this.$rule = RecommendRule.findOne(this.$route.params.id);
-    this.title = this.$rule.title;
-    this.filename = this.$rule.filename;
-    this.params = this.$rule.params;
+    RecommendRule.findOne(this.$route.params.id).then((rule) => {
+      this.$rule = rule;
+      this.title = this.$rule.title;
+      this.filename = this.$rule.filename;
+      this.params = this.$rule.params;
+    });
   },
 };
 </script>
