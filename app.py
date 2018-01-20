@@ -4,11 +4,11 @@ import json
 
 @route('/static/<file_path:path>')
 def static(file_path):
-    return static_file(file_path, root='./dist/static')
+    return static_file(file_path, root='./client/dist/static')
 
 @route('/app')
 def app():
-    return static_file('index.html', root='./dist')
+    return static_file('index.html', root='./client/dist')
 
 @route('/bot')
 def bot():
@@ -40,4 +40,4 @@ def dialogflow():
     r.set_header('Content-Type', 'application/json')
     return r
 
-run(host='localhost', port=3000)
+run(host='0.0.0.0', port=3000)
