@@ -43,3 +43,9 @@ def deleteByGroupingRuleId(groupingRuleId):
     deleteTarges = findByGroupingRuleId(groupingRuleId)
     for deleteTarget in deleteTarges:
         storeData.remove(deleteTarget)
+
+def findAttachedGroup(accountId, groupingRuleId):
+    groups = findByGroupingRuleId(groupingRuleId)
+    for group in groups:
+        if accountId in group["members"]:
+            return group

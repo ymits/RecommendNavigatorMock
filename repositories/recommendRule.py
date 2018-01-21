@@ -1,3 +1,6 @@
+import importlib
+import json
+
 storeData = [
   { 'id': 'PresetRecommendRule_1', 'title': 'クイックスコアを利用した推奨', 'filename': 'sample1', 'params': '{\n  "key1": "value1",\n  "key2": "value2"\n}' },
   { 'id': 'PresetRecommendRule_2', 'title': 'クイックスコアと購入履歴を利用した推奨', 'filename': 'sample2', 'params': '{\n  "key1": "value1",\n  "key2": "value2"\n}' },
@@ -24,3 +27,8 @@ def findOne(id):
 
 def findAll():
     return storeData
+
+def execute(accountId, recommendRule):
+    m = importlib.import_module('rules.recommend.' + recommendRule["filename"])
+    params = json.loads(recommendRule.get("params", {}))
+    return m.execute(accountId, params)

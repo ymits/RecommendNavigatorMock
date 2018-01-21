@@ -157,4 +157,13 @@ def deleteGroupScore():
     groupScore.deleteByGroupingRuleId(groupingRuleId)
     return resJSON({})
 
+@get('/api/recommendFund')
+def recommendFund():
+    accountId = request.query.accountId
+    activeGroupingRule = groupingRule.findActiveRule()
+    attachedGroup = group.findAttachedGroup(accountId, activeGroupingRule["id"])
+    selectRecommendRule = recommendRule.findOne(attachedGroup["recommendRuleId"])
+    funds = recommendRule.execute(accountId, selectRecommendRule)
+    return resJSON(funds)
+
 run(host='0.0.0.0', port=3000)

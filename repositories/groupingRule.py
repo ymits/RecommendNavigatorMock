@@ -34,7 +34,7 @@ def findAll():
 
 def findActiveRule():
     for data in storeData:
-        if data['active']:
+        if data.get('active', False):
             return data
 
 def trialGrouping(groupingRule):
