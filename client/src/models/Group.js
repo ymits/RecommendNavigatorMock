@@ -135,7 +135,11 @@ class Group {
   }
 
   static deleteByGroupingRuleId(groupingRuleId) {
-    return axios.delete('/api/group', { groupingRuleId }).then(() => {
+    return axios.delete('/api/group', {
+      params: {
+        groupingRuleId,
+      },
+    }).then(() => {
       // do nothing
     }, (error) => {
       console.log(error);

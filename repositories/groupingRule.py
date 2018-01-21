@@ -39,6 +39,13 @@ def findActiveRule():
 
 def trialGrouping(groupingRule):
     m = importlib.import_module('rules.group.' + groupingRule["filename"])
-    params = json.loads(groupingRule.get("params", {}))
+    params = groupingRule.get("params", "")
+    if params == "":
+        params = "{}"
+    params = json.loads(params)
     groupsMembers = m.execute(account.findAllAccounts(), params)
-    return list(map(lambda members: {'id': idGenerator.generate('Group_'), 'members': members}, groupsMembers))
+    return list(map(lambda members: {
+        'id': idGenerator.generate('Group_'),
+        'members': members,
+        'groupingRuleId': groupingRule['id']
+        }, groupsMembers))

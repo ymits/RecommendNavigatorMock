@@ -6,7 +6,7 @@
           <el-button type="text" @click="back" icon="el-icon-arrow-left">戻る</el-button>
         </div>
         <div class="col title">
-          <input type="text" class="title-text" name="title" v-model="title" placeholder="ルール名称" v-validate="'required'">
+          <input type="text" class="title-text" name="title" v-model="rule.title" placeholder="ルール名称" v-validate="'required'">
         </div>
         <div class="col fix">
           <el-button type="primary" @click="saveGroupingRule">保存</el-button>
@@ -19,10 +19,10 @@
         <el-tag type="danger">現在適用中のルール</el-tag>
       </div>
       <el-form-item label="ファイル名">
-        <el-input v-model="filename"></el-input>
+        <el-input v-model="rule.filename"></el-input>
       </el-form-item>
       <el-form-item label="実行パラメータ">
-        <el-input type="textarea" :rows="5" v-model="params"></el-input>
+        <el-input type="textarea" :rows="5" v-model="rule.params"></el-input>
       </el-form-item>
       <el-form-item class="btn-row">
         <el-button @click="trialExecute">試し実行</el-button>
@@ -59,7 +59,7 @@
           label="推奨ルール"
           width="280">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.recommendRule" placeholder="推奨ルールの選択">
+            <el-select v-model="scope.row.recommendRuleId" placeholder="推奨ルールの選択">
               <el-option
                 v-for="rule in recommendRules"
                 :key="rule.id"
@@ -97,13 +97,10 @@ export default {
   name: 'GroupingRuleSaveView',
   data() {
     return {
-      title: '',
-      filename: '',
-      params: '',
+      rule: null,
       showGroupInfo: false,
       groups: [],
       recommendRules: [],
-      rule: null,
     };
   },
 
@@ -120,18 +117,7 @@ export default {
           return;
         }
         this.$confirm('保存しますか?').then(() => {
-          let rule;
-          if (this.rule) {
-            rule = this.rule;
-          } else {
-            rule = GroupingRule.of(this.title, this.filename, this.params);
-          }
-          rule.title = this.title;
-          rule.filename = this.filename;
-          rule.params = this.params;
-
-          rule.save();
-
+          this.rule.save();
           this.$router.back();
         });
       });
@@ -139,8 +125,7 @@ export default {
 
     // 試し実行ボタン押下時
     trialExecute() {
-      const rule = this.inputGroupingRule();
-      rule.trialGrouping().then((groups) => {
+      this.rule.trialGrouping().then((groups) => {
         this.groups = groups;
         this.showGroupInfo = true;
       });
@@ -148,41 +133,35 @@ export default {
 
     // 適用ボタン押下時
     adaptRule() {
-      this.$confirm('適用しますか?').then(() => {
-        // GroupingRuleのactiveフラグを付け替える
-        GroupingRule.findAll().forEach((_rule) => {
-          _rule.active = false;
-          _rule.save();
+      this.$validator.validateAll().then((result) => {
+        if (!result) {
+          return;
+        }
+        this.$confirm('適用しますか?').then(() => {
+          // GroupingRuleのactiveフラグを付け替える
+          GroupingRule.findAll().then((groups) => {
+            groups.forEach((_rule) => {
+              _rule.active = false;
+              _rule.save();
+            });
+            this.rule.active = true;
+            this.rule.save();
+            return this.rule;
+          }).then((rule) => {
+            // Groupの保存
+            Group.deleteByGroupingRuleId(rule.id);
+            this.groups.forEach((group) => {
+              group.save();
+            });
+            this.$router.back();
+          });
         });
-        const rule = this.inputGroupingRule();
-        rule.active = true;
-
-        rule.save();
-
-        // Groupの保存
-        Group.deleteAll();
-        this.groups.forEach((group) => {
-          group.save();
-        });
-
-        this.$router.back();
       });
     },
+  },
 
-    // 入力情報のグルーピングルール
-    inputGroupingRule() {
-      let rule;
-      if (this.rule) {
-        rule = this.rule;
-      } else {
-        rule = GroupingRule.of(this.title, this.filename, this.params);
-      }
-      rule.title = this.title;
-      rule.filename = this.filename;
-      rule.params = this.params;
-
-      return rule;
-    },
+  created() {
+    this.rule = GroupingRule.of();
   },
 
   // 画面描画時
@@ -197,9 +176,6 @@ export default {
 
     GroupingRule.findOne(this.$route.params.id).then((rule) => {
       this.rule = rule;
-      this.title = rule.title;
-      this.filename = rule.filename;
-      this.params = rule.params;
       return Group.findByGroupingRuleId(rule.id);
     }).then((groups) => {
       this.groups = groups;
