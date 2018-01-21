@@ -6,15 +6,15 @@ storeData = [
 def save(recommendRule):
     storedData = findOne(recommendRule['id'])
     if storedData is not None :
-        storedData['title'] = recommendRule['title']
-        storedData['filename'] = recommendRule['filename']
-        storedData['params'] = recommendRule['params']
+        storedData['title'] = recommendRule.get('title', None)
+        storedData['filename'] = recommendRule.get('filename', None)
+        storedData['params'] = recommendRule.get('params', None)
     else :
         storeData.append({
-            'id': recommendRule['id'],
-            'title': recommendRule['title'],
-            'filename': recommendRule['filename'],
-            'params': recommendRule['params'] })
+            'id': recommendRule.get('id', None),
+            'title': recommendRule.get('title', None),
+            'filename': recommendRule.get('filename', None),
+            'params': recommendRule.get('params', None) })
 
 def findOne(id):
     for data in storeData:
