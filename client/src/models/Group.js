@@ -121,7 +121,12 @@ class Group {
   }
 
   static findByGroupingRuleId(groupingRuleId) {
-    return axios.get('/api/group', { groupingRuleId }).then((response) => {
+    console.log('findByGroupingRuleId');
+    return axios.get('/api/group', {
+      params: {
+        groupingRuleId,
+      },
+    }).then((response) => {
       return response.data.data.map((json) => {
         return new Group(json.id, json.members, json.recommendRuleId, json.groupingRuleId);
       });

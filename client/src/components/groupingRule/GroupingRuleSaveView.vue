@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import _ from 'underscore';
 import GroupingRule from '@/models/GroupingRule';
 import RecommendRule from '@/models/RecommendRule';
 import Group from '@/models/Group';
@@ -140,17 +139,11 @@ export default {
 
     // 試し実行ボタン押下時
     trialExecute() {
-      let groupNum = 1;
-      try {
-        const params = JSON.parse(this.params);
-        groupNum = params.groupNum;
-      } catch (e) {
-        // do nothing
-      }
-      this.groups = _.range(groupNum).map(() => {
-        return Group.of(300);
+      const rule = this.inputGroupingRule();
+      rule.trialGrouping().then((groups) => {
+        this.groups = groups;
+        this.showGroupInfo = true;
       });
-      this.showGroupInfo = true;
     },
 
     // 適用ボタン押下時
@@ -161,15 +154,7 @@ export default {
           _rule.active = false;
           _rule.save();
         });
-        let rule;
-        if (this.rule) {
-          rule = this.rule;
-        } else {
-          rule = GroupingRule.of(this.title, this.filename, this.params);
-        }
-        rule.title = this.title;
-        rule.filename = this.filename;
-        rule.params = this.params;
+        const rule = this.inputGroupingRule();
         rule.active = true;
 
         rule.save();
@@ -183,11 +168,25 @@ export default {
         this.$router.back();
       });
     },
+
+    // 入力情報のグルーピングルール
+    inputGroupingRule() {
+      let rule;
+      if (this.rule) {
+        rule = this.rule;
+      } else {
+        rule = GroupingRule.of(this.title, this.filename, this.params);
+      }
+      rule.title = this.title;
+      rule.filename = this.filename;
+      rule.params = this.params;
+
+      return rule;
+    },
   },
 
   // 画面描画時
   mounted() {
-    console.log('view');
     RecommendRule.findAll().then((rules) => {
       this.recommendRules = rules;
     });
@@ -201,10 +200,10 @@ export default {
       this.title = rule.title;
       this.filename = rule.filename;
       this.params = rule.params;
-      this.showGroupInfo = rule.active;
       return Group.findByGroupingRuleId(rule.id);
     }).then((groups) => {
       this.groups = groups;
+      this.showGroupInfo = groups.length > 0;
     });
   },
 };

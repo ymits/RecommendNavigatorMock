@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import axios from 'axios';
-
+import Group from '@/models/Group';
 /*
 const storeData = [
   { id: 'PresetGroupingRule_1', title: '単一グループ', filename: 'sample1', params: '' },
@@ -71,6 +71,16 @@ class GroupingRule {
   save() {
     axios.post('/api/groupingRule', this).then(() => {
       // no
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  trialGrouping() {
+    return axios.post('/api/groupingRule/trial', this).then((response) => {
+      return response.data.data.map((json) => {
+        return new Group(json.id, json.members, json.recommendRuleId, json.groupingRuleId);
+      });
     }, (error) => {
       console.log(error);
     });

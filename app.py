@@ -82,6 +82,12 @@ def saveGroupingRule():
     groupingRule.save(request.json)
     return resJSON({})
 
+@post('/api/groupingRule/trial')
+def trialGrouping():
+    print('Request body: ' +  json.dumps(request.json))
+    groups = groupingRule.trialGrouping(request.json)
+    return resJSON(groups)
+
 @get('/api/group')
 def findGroup():
     print('findGroup')
