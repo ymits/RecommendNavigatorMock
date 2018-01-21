@@ -66,15 +66,21 @@ class Group {
   }
 
   static findOne(id) {
-    const json = storeData.find(data => id === data.id);
-    return json ? new Group(json.id, json.memberCount, json.recommendRule, json.recommendCount, json.viewCount,
-      json.buyCount, json.viewRatio, json.buyRatio) : null;
+    return new Promise((resolve) => {
+      const json = storeData.find(data => id === data.id);
+      const group = json ? new Group(json.id, json.memberCount, json.recommendRule, json.recommendCount, json.viewCount,
+        json.buyCount, json.viewRatio, json.buyRatio) : null;
+      resolve(group);
+    });
   }
 
   static findAll() {
-    return storeData.map((data) => {
-      return new Group(data.id, data.memberCount, data.recommendRule, data.recommendCount, data.viewCount, data.buyCount,
-        data.viewRatio, data.buyRatio);
+    return new Promise((resolve) => {
+      const groups = storeData.map((data) => {
+        return new Group(data.id, data.memberCount, data.recommendRule, data.recommendCount, data.viewCount, data.buyCount,
+          data.viewRatio, data.buyRatio);
+      });
+      resolve(groups);
     });
   }
 

@@ -188,14 +188,16 @@ export default {
       return;
     }
 
-    this.rule = GroupingRule.findOne(this.$route.params.id);
-    this.title = this.rule.title;
-    this.filename = this.rule.filename;
-    this.params = this.rule.params;
-    this.showGroupInfo = this.rule.active;
-    if (this.showGroupInfo) {
-      this.groups = Group.findAll();
-    }
+    GroupingRule.findOne(this.$route.params.id).then((rule) => {
+      this.rule = rule;
+      this.title = rule.title;
+      this.filename = rule.filename;
+      this.params = rule.params;
+      this.showGroupInfo = rule.active;
+      return Group.findAll();
+    }).then((groups) => {
+      this.groups = groups;
+    });
   },
 };
 </script>

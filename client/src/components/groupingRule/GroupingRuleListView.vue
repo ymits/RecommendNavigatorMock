@@ -43,7 +43,9 @@ export default {
   },
 
   mounted() {
-    this.rules = GroupingRule.findAll();
+    GroupingRule.findAll().then((rules) => {
+      this.rules = rules;
+    });
   },
 };
 </script>
