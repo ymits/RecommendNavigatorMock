@@ -36,12 +36,15 @@ def bot():
     ''')
 
 def resJSON(body):
-    print(json.dumps(body))
+    print('Response body: ' +  json.dumps(body))
     res = HTTPResponse(status=200, body={'data': body})
     res.set_header('Content-Type', 'application/json')
-    res.set_header('Access-Control-Allow-Origin', '*')
-    res.set_header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS')
-    res.set_header('Access-Control-Allow-Headers', 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token')
+    return res
+
+def resError(err):
+    print(err)
+    res = HTTPResponse(status=400, body={'message': "{0}".format(err)})
+    res.set_header('Content-Type', 'application/json')
     return res
 
 @post('/dialogflow')
@@ -85,8 +88,14 @@ def saveGroupingRule():
 @post('/api/groupingRule/trial')
 def trialGrouping():
     print('Request body: ' +  json.dumps(request.json))
-    groups = groupingRule.trialGrouping(request.json)
-    return resJSON(groups)
+    try:
+        groups = groupingRule.trialGrouping(request.json)
+        return resJSON(groups)
+    except ModuleNotFoundError as err:
+        return resError(err)
+    except json.decoder.JSONDecodeError as err2:
+        return resError(err2)
+
 
 @get('/api/group')
 def findGroup():

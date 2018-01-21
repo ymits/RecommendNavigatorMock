@@ -49,7 +49,7 @@
               title="割り振り口座"
               width="200"
               trigger="hover"
-              :content="scope.row.members.join(',')">
+              :content="scope.row.members.join(', ')">
               <el-button type="text" slot="reference">{{ scope.row.memberCount() }}</el-button>
             </el-popover>
             人

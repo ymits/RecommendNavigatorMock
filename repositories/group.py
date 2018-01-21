@@ -1,13 +1,13 @@
 storeData = [
   {
     'id': 'PresetGroup_1',
-    'members': ['80100001','80100002'],
+    'members': ['80100001','80100002','80100003','80300001','80300002'],
     'recommendRuleId': 'PresetRecommendRule_1',
     'groupingRuleId': 'PresetGroupingRule_2'
   },
   {
     'id': 'PresetGroup_2',
-    'members': ['80200001','80200002'],
+    'members': ['80200001','80200002','80200003','80300003','80400001'],
     'recommendRuleId': 'PresetRecommendRule_2',
     'groupingRuleId': 'PresetGroupingRule_2'
   },

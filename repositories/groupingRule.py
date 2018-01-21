@@ -4,8 +4,8 @@ import utils.idGenerator as idGenerator
 import repositories.account as account
 
 storeData = [
-  { 'id': 'PresetGroupingRule_1', 'title': '単一グループ', 'filename': 'sample1', 'params': '' },
-  { 'id': 'PresetGroupingRule_2', 'title': 'ランダムグループ分け', 'filename': 'sample2', 'params': '{\n  "groupNum": 2\n}', 'active': True },
+  { 'id': 'PresetGroupingRule_1', 'title': '単一グループ', 'filename': 'singleGrouping', 'params': '' },
+  { 'id': 'PresetGroupingRule_2', 'title': 'ランダムグループ分け', 'filename': 'randamGrouping', 'params': '{\n  "groupNum": 2\n}', 'active': True },
 ]
 
 def save(groupingRule):
@@ -39,5 +39,6 @@ def findActiveRule():
 
 def trialGrouping(groupingRule):
     m = importlib.import_module('rules.group.' + groupingRule["filename"])
-    groupsMembers = m.execute(account.findAllAccounts, json.loads(groupingRule["params"]))
+    params = json.loads(groupingRule.get("params", {}))
+    groupsMembers = m.execute(account.findAllAccounts(), params)
     return list(map(lambda members: {'id': idGenerator.generate('Group_'), 'members': members}, groupsMembers))

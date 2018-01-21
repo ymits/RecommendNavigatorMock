@@ -121,7 +121,6 @@ class Group {
   }
 
   static findByGroupingRuleId(groupingRuleId) {
-    console.log('findByGroupingRuleId');
     return axios.get('/api/group', {
       params: {
         groupingRuleId,
