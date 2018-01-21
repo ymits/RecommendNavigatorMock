@@ -44,7 +44,15 @@
           width="80"
           align="right">
           <template slot-scope="scope">
-            <el-button type="text">{{ scope.row.memberCount }}</el-button> 人
+            <el-popover
+              placement="top-start"
+              title="割り振り口座"
+              width="200"
+              trigger="hover"
+              :content="scope.row.members.join(',')">
+              <el-button type="text" slot="reference">{{ scope.row.memberCount() }}</el-button>
+            </el-popover>
+            人
           </template>
         </el-table-column>
         <el-table-column
@@ -194,7 +202,7 @@ export default {
       this.filename = rule.filename;
       this.params = rule.params;
       this.showGroupInfo = rule.active;
-      return Group.findAll();
+      return Group.findByGroupingRuleId(rule.id);
     }).then((groups) => {
       this.groups = groups;
     });

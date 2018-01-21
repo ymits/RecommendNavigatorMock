@@ -1,5 +1,6 @@
-import _ from 'underscore';
+import axios from 'axios';
 
+/*
 const storeData = [
   {
     id: 'PresetGroup_1',
@@ -86,6 +87,55 @@ class Group {
 
   static deleteAll() {
     storeData.length = 0;
+  }
+}
+*/
+
+class Group {
+  constructor(id, members, recommendRuleId, groupingRuleId) {
+    this.id = id;
+    this.members = members;
+    this.recommendRuleId = recommendRuleId;
+    this.groupingRuleId = groupingRuleId;
+  }
+
+  memberCount() {
+    return this.members.length;
+  }
+
+  save() {
+    axios.post('/api/group', this).then(() => {
+      // no
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  static findOne(id) {
+    return axios.get(`/api/group/${id}`).then((response) => {
+      const json = response.data.data;
+      return json ? new Group(json.id, json.members, json.recommendRuleId, json.groupingRuleId) : null;
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  static findByGroupingRuleId(groupingRuleId) {
+    return axios.get('/api/group', { groupingRuleId }).then((response) => {
+      return response.data.data.map((json) => {
+        return new Group(json.id, json.members, json.recommendRuleId, json.groupingRuleId);
+      });
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
+  static deleteByGroupingRuleId(groupingRuleId) {
+    return axios.delete('/api/group', { groupingRuleId }).then(() => {
+      // do nothing
+    }, (error) => {
+      console.log(error);
+    });
   }
 }
 
