@@ -178,7 +178,8 @@ def dialogflow():
 
     actionHandlers = {
         'action.switch.user': switch_user,
-        'action.get.user': get_user
+        'action.get.user': get_user,
+        'action.suggestion': get_suggestion
     }
     if actionHandlers.get(action, None) is None:
         action = "default"
@@ -203,7 +204,24 @@ def switch_user(parameters, contexts):
 
 def get_user(parameters, contexts):
     account = getContext(contexts, 'account')
+    if account is None:
+        account = '80100001'
+        putContext(contexts, 'account', account)
     return '現在のユーザは "' + str(int(account)) + '" です'
+
+def get_suggestion(parameters, contexts):
+    accountId = getContext(contexts, 'account')
+    if accountId is None:
+        accountId = '80100001'
+        putContext(contexts, 'account', accountId)
+    activeGroupingRule = groupingRule.findActiveRule()
+    attachedGroup = group.findAttachedGroup(accountId, activeGroupingRule["id"])
+    if attachedGroup is None:
+        return 'ユーザがどのグループにも紐付いていません'
+    selectRecommendRule = recommendRule.findOne(attachedGroup["recommendRuleId"])
+    funds = recommendRule.execute(accountId, selectRecommendRule)
+    funds = map(lambda n:"「"+n+"」", funds)
+    return 'あなたにおすすめの銘柄は'+('と'.join(funds))+'です'
 
 def putContext(contexts, name, value):
     lifespan = 10
@@ -224,6 +242,7 @@ def putContext(contexts, name, value):
         })
 
 def getContext(contexts, name):
+    context = None
     for i in contexts:
         if i['name'] == name:
             context = i
@@ -231,6 +250,6 @@ def getContext(contexts, name):
     if context is not None:
         return context['parameters']['value']
     else:
-        return null
+        return None
 
 run(host='0.0.0.0', port=3000)
