@@ -25,19 +25,23 @@ def bot():
   </head>
   <body>
     <h1>ファイナンシャル・アドバイザーデモ</h1>
-
+<div style="overflow:hidden;">
 <iframe
     width="350"
     height="500"
+    style="margin-top:-80px;"
     src="https://console.dialogflow.com/api-client/demo/embedded/93173144-ecfd-42ac-a300-3afb166cbaca">
 </iframe>
+</div>
   </body>
 </html>
     ''')
 
-def resJSON(body):
+def resJSON(body, dataFieldFlg = True):
     print('Response body: ' +  json.dumps(body))
-    res = HTTPResponse(status=200, body={'data': body})
+    if dataFieldFlg:
+        body={'data': body}
+    res = HTTPResponse(status=200, body=body)
     res.set_header('Content-Type', 'application/json')
     return res
 
@@ -46,12 +50,6 @@ def resError(err):
     res = HTTPResponse(status=400, body={'message': "{0}".format(err)})
     res.set_header('Content-Type', 'application/json')
     return res
-
-@post('/dialogflow')
-def dialogflow():
-    # print('Dialogflow Request body: ' +  json.dumps(request.body))
-    body = {'speech': 'hello world', 'displayText': 'hello world'}
-    return resJSON(body)
 
 @get('/api/recommendRule')
 def findRecommendRule():
@@ -165,5 +163,74 @@ def recommendFund():
     selectRecommendRule = recommendRule.findOne(attachedGroup["recommendRuleId"])
     funds = recommendRule.execute(accountId, selectRecommendRule)
     return resJSON(funds)
+
+@post('/dialogflow')
+def dialogflow():
+    print('Request body: ' +  json.dumps(request.json))
+    action = request.json['result']['action'] # https://dialogflow.com/docs/actions-and-parameters
+    parameters = request.json['result']['parameters'] # https://dialogflow.com/docs/actions-and-parameters
+    contexts = request.json['result']['contexts']
+
+    print('parameters:', parameters)
+    print('contexts:', contexts)
+    if contexts is None:
+        contexts = []
+
+    actionHandlers = {
+        'action.switch.user': switch_user,
+        'action.get.user': get_user
+    }
+    if actionHandlers.get(action, None) is None:
+        action = "default"
+
+    body = actionHandlers[action](parameters, contexts)
+    return dialogflowMessage(body, contexts)
+
+
+def dialogflowMessage(body, contexts):
+    if isinstance(body, str):
+        body = {'speech': body, 'displayText': body}
+    body['contextOut'] = contexts
+    return resJSON(body, False)
+
+def default_action(parameters, contexts):
+    return '404 error'
+
+def switch_user(parameters, contexts):
+    account = parameters['account']
+    putContext(contexts, 'account', account)
+    return 'ユーザ "' + str(account) + '" に切り替えました'
+
+def get_user(parameters, contexts):
+    account = getContext(contexts, 'account')
+    return '現在のユーザは "' + str(int(account)) + '" です'
+
+def putContext(contexts, name, value):
+    lifespan = 10
+
+    context = None
+    for i in contexts:
+        if i['name'] == name:
+            context = i
+
+    if context is not None :
+        context['lifespan'] = lifespan
+        context['parameters']['value'] = value
+    else:
+        contexts.append({
+            'name': name,
+            'lifespan': lifespan,
+            'parameters': {'value': value}
+        })
+
+def getContext(contexts, name):
+    for i in contexts:
+        if i['name'] == name:
+            context = i
+
+    if context is not None:
+        return context['parameters']['value']
+    else:
+        return null
 
 run(host='0.0.0.0', port=3000)
