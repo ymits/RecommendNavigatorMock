@@ -8,9 +8,17 @@ import repositories.groupScore as groupScore
 
 @get('/static/<file_path:path>')
 def static(file_path):
-    return static_file(file_path, root='./client/dist/static')
+    res = static_file(file_path, root='./management/dist/static')
+    if res.status_code == 404:
+        res = static_file(file_path, root='./client/dist/static')
+    
+    return res
 
-@get('/app')
+@get('/mgt')
+def app():
+    return static_file('index.html', root='./management/dist')
+
+@get('/client')
 def app():
     return static_file('index.html', root='./client/dist')
 

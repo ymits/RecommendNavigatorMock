@@ -1,6 +1,6 @@
-# client
+# クライアンアプリ
 
-> client mock
+> A Vue.js Client
 
 ## Build Setup
 

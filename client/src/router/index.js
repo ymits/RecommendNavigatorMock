@@ -1,38 +1,15 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Index from '@/components/Index';
-import GroupingRuleListView from '@/components/groupingRule/GroupingRuleListView';
-import GroupingRuleSaveView from '@/components/groupingRule/GroupingRuleSaveView';
-import RecommendRuleListView from '@/components/recommendRule/RecommendRuleListView';
-import RecommendRuleSaveView from '@/components/recommendRule/RecommendRuleSaveView';
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/recommendRule',
-      alias: '/',
-      component: Index,
-      icon: 'el-icon-share',
-      title: '推奨ルール',
-      children: [
-        { path: '', name: 'RecommendRuleListView', component: RecommendRuleListView },
-        { path: 'create', name: 'RecommendRuleCreateView', component: RecommendRuleSaveView },
-        { path: 'update/:id', name: 'RecommendRuleUpdateView', component: RecommendRuleSaveView },
-      ],
-    },
-    {
-      path: '/groupingRule',
-
-      component: Index,
-      icon: 'el-icon-menu',
-      title: 'グループ分けルール',
-      children: [
-        { path: '', name: 'GroupingRuleListView', component: GroupingRuleListView },
-        { path: 'create', name: 'GroupingRuleCreateView', component: GroupingRuleSaveView },
-        { path: 'update/:id', name: 'GroupingRuleUpdateView', component: GroupingRuleSaveView },
-      ],
-    },
-  ],
-});
+      path: '/',
+      name: 'HelloWorld',
+      component: HelloWorld
+    }
+  ]
+})
