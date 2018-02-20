@@ -104,7 +104,7 @@ footer {
 }
 
 .qa-area {
-  height: 450px;
+  height: 500px;
 }
 
 .action-btn {
@@ -135,6 +135,21 @@ footer {
     border-color: #457;
     color: #fff;
     }
+  }
+}
+
+.select-btn {
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .el-button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-size: 30px;
+    padding: 20px;
+    margin-top: 50px;
   }
 }
 </style>

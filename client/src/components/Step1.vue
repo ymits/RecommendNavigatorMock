@@ -47,18 +47,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.select-btn {
-  width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
 
-  .el-button {
-    display: block;
-    width: 100%;
-    margin: 0;
-    font-size: 30px;
-    padding: 20px;
-    margin-top: 50px;
-  }
-}
 </style>

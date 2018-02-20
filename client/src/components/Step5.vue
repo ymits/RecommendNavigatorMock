@@ -1,20 +1,21 @@
 <template>
-  <div class="step2">
+  <div class="step5">
     <div class="qa-area">
       <div class="section-title">
         <h2>
-          質問２：どのような目的で投資信託を購入しますか？
+          質問５：この先日本経済はどうなると思いますか？
         </h2>
       </div>
       <div class="select-btn">
-        <el-button @click="select('1')" :class="{'is-active':value==='1'}">資産形成</el-button>
-        <el-button @click="select('2')" :class="{'is-active':value==='2'}">使いながら運用</el-button>
+        <el-button @click="select('1')" :class="{'is-active':value==='1'}">景気の見通しは明るい</el-button>
+        <el-button @click="select('2')" :class="{'is-active':value==='2'}">景気の見通しは暗い</el-button>
+        <el-button @click="select('3')" :class="{'is-active':value==='3'}">変わらない、わからない</el-button>
       </div>
     </div>
     <div class="action-btn">
       <el-button-group>
         <el-button icon="el-icon-arrow-left" @click="goBack">前の質問へ</el-button>
-        <el-button type="primary" @click="goNext">次の質問へ<i class="el-icon-arrow-right el-icon-right"></i></el-button>
+        <el-button type="primary" @click="goNext">診断結果へ<i class="el-icon-arrow-right el-icon-right"></i></el-button>
       </el-button-group>
     </div>
   </div>
@@ -22,7 +23,7 @@
 
 <script>
 export default {
-  name: 'Step2',
+  name: 'Step5',
   data () {
     return {
       value: ''
@@ -38,7 +39,7 @@ export default {
     },
     // 次へボタン押下時
     goNext() {
-      this.$router.push({ name: 'Step3' });
+      this.$router.push({ name: 'Result' });
     }
   }
 }
