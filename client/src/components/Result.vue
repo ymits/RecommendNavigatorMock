@@ -145,6 +145,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'Result',
   data () {
@@ -160,6 +161,21 @@ export default {
     }
   },
   methods: {
+  },
+  mounted: function() {
+    var accountId = localStorage.getItem('userId');
+    axios.get('/api/recommendFund', {
+      params: {
+        accountId,
+      },
+    }).then((response) => {
+      var data = response.data.data;
+      this.fund1 = data[0];
+      this.fund2 = data[1];
+      this.fund3 = data[2];
+    }, (error) => {
+      console.log(error);
+    });
   }
 }
 </script>

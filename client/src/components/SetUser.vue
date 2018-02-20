@@ -33,6 +33,7 @@ export default {
   methods: {
     // 次へボタン押下時
     goNext() {
+      localStorage.setItem('userId', this.userId);
       this.$router.push({ name: 'Step1' });
     }
   }
