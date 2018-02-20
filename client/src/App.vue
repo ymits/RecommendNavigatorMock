@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <header></header>
-    <transition :name="transitionName">
-      <router-view class="child-view"/>
-    </transition>
+    <div class="main">
+      <transition :name="transitionName">
+        <router-view class="child-view"/>
+      </transition>
+    </div>
+    <footer>Copyright © 2018 Simplex Inc.</footer>
   </div>
 </template>
 
@@ -39,14 +42,33 @@ header {
   background: #195547;
   height: 60px;
 }
-.child-view {
+footer {
+  background: #195547;
+  height: 25px;
+
   position: absolute;
+  bottom:0;
   left:0;
   right:0;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  padding: 15px;
+
+}
+.child-view {
+  position: absolute;
+  width: 1200px;
+  // margin-left: auto;
+  // margin-right: auto;
+  left: 50%;
+  margin-left: -600px;
   top:60px;
-  bottom:0;
+  bottom:25px;
   transition: all .5s cubic-bezier(.55,0,.1,1);
   padding: 15px;
+
+  background: url(/static/image/profileQA_back.png)
 }
 .slide-left-enter, .slide-right-leave-active {
   //opacity: 0;
@@ -102,6 +124,16 @@ header {
       &.is-disabled {
         background-color: rgba(25,85,71,0.65);
       }
+    }
+  }
+}
+
+.el-button{
+  &.el-button--default {
+    &.is-active {
+    background-color: #457;
+    border-color: #457;
+    color: #fff;
     }
   }
 }

@@ -3,8 +3,13 @@
     <div class="qa-area">
       <div class="section-title">
         <h2>
-          質問１
+          質問１：どのような投資信託をお探しですか？
         </h2>
+      </div>
+      <div class="select-btn">
+        <el-button @click="select('1')" :class="{'is-active':value==='1'}">自分の好みに合った投資信託を探す</el-button>
+        <el-button @click="select('2')" :class="{'is-active':value==='2'}">現在持っている投資信託より、条件の良い投資信託を探す</el-button>
+        <el-button @click="select('3')" :class="{'is-active':value==='3'}">自分に最適な投資信託の組み合わせを探す</el-button>
       </div>
     </div>
     <div class="action-btn">
@@ -21,10 +26,13 @@ export default {
   name: 'Step1',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      value: ''
     }
   },
   methods: {
+    select(v) {
+      this.value = v;
+    },
     // 前へボタン押下時
     goBack() {
       this.$router.go(-1);
@@ -39,5 +47,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.select-btn {
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 
+  .el-button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-size: 30px;
+    padding: 20px;
+    margin-top: 50px;
+  }
+}
 </style>
