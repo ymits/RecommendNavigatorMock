@@ -1,3 +1,3 @@
 
 def execute(accountId, params):
-    return ["ひふみ2"]
+    return ["たわらノーロード先進国株", "ニッセイTOPIX", "ひふみプラス"]
