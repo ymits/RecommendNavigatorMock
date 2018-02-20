@@ -1,6 +1,7 @@
 <template>
   <div class="step5">
     <div class="qa-area">
+      <div class="page-title">個別投信ロボ</div>
       <div class="section-title">
         <h2>
           質問５：この先日本経済はどうなると思いますか？

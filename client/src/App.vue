@@ -81,7 +81,34 @@ footer {
   transform: translate(-100%, 0);
 }
 
+.page-title {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+  display: inline-block;
+  margin-left: 0px;
+  padding: 15px 0px;
+  border-radius: 4px;
+  font-size: 18px;
+  &:before {
+    content: " ";
+    display: inline-block;
+    border: 10px solid transparent;
+    border-left: 10px solid #195547;
+    margin-top: 1px;
+    margin-left: 0;
+    float: left;
+  }
+}
+.section-title {
+  color: #fff;
+  background-color: #195547;
+  h2 {
+    padding: 10px 0 7px 15px;
+  }
 
+}
+/*
 .section-title {
   position: relative;
 
@@ -102,9 +129,10 @@ footer {
     }
   }
 }
+*/
 
 .qa-area {
-  height: 500px;
+  height: 600px;
 }
 
 .action-btn {

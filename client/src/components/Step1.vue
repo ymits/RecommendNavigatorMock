@@ -1,6 +1,7 @@
 <template>
   <div class="step1">
     <div class="qa-area">
+      <div class="page-title">個別投信ロボ</div>
       <div class="section-title">
         <h2>
           質問１：どのような投資信託をお探しですか？
