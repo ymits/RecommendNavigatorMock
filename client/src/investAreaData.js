@@ -138,7 +138,7 @@ var investAreas = {
     "UGA",
     "EGY",
     "TZA",
-    "GFA",
+    "BFA",
     "ZMB"
   ],
   "OC": [
@@ -259,10 +259,12 @@ var investAreas = {
     "PHL",
     "TLS",
     "SGP",
-    "VNP",
+    "VNM",
     "TJK",
     "THA",
     "TKM",
     "UZB"
   ]
 };
+
+export default investAreas;
