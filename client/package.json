@@ -11,16 +11,17 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "d3": "^4.13.0",
     "datamaps": "^0.5.8",
     "element-ui": "^2.0.11",
+    "hchs-vue-charts": "^1.2.8",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
+    "topojson": "^3.0.2",
     "underscore": "^1.8.3",
     "vee-validate": "^2.0.3",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1",
-    "d3": "3.5.3",
-    "topojson": "1.6.9"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

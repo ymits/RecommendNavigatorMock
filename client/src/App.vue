@@ -68,7 +68,8 @@ footer {
   transition: all .5s cubic-bezier(.55,0,.1,1);
   padding: 15px;
 
-  background: url(/static/image/profileQA_back.png)
+  background: url(/static/image/profileQA_back.png);
+  overflow: scroll;
 }
 .slide-left-enter, .slide-right-leave-active {
   //opacity: 0;
